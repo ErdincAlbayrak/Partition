@@ -11,6 +11,6 @@ typedef struct vertex {
 	int heapRank; //[0,V]
 	int partition; //{0,1}
 	int locked; //{0,1}
-} vertex;
+} Vertex;
 
 #endif //PARTITION_VERTEX_H

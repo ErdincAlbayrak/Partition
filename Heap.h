@@ -7,10 +7,11 @@
 
 #include "Vertex.h"
 
-void buildMaxHeap(int* keys, int* vertexNumbers, int length);
-void changeKey(int keyChange, int* heapRank);
+//void buildMaxHeap(int* keys, int* vertexNumbers, int length); //deprecated
+void changeKey(int heapRank, int keyChange);
 int extractMax();
-void buildHeap( vertex* vertexList, int length);
+void buildHeap( Vertex* vertexList, int length);
 void printHeap(); //testing purposes
+void addNode(Vertex* vertex);
 
 #endif //PARTITION_HEAP_H
