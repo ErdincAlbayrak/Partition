@@ -3,26 +3,40 @@
 //
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "Heap.h"
+#include "Vertex.h"
 
-typedef struct HeapNode{
-	int key;
-	int vertexNo;
-} HeapNode;
-
-HeapNode* heap;
+vertex** heap;
 int size;
 
-void heapify(int index) {
+void swapVertex(vertex** h1, vertex** h2) {
+	vertex* swapSpace;
+	int rank1;
+
+	//heap[largest]->heapRank = currentIndex;
+	//heap[currentIndex]->heapRank = largest;
+	//change heapRanks
+	rank1 = (*h1)->heapRank;
+	(*h1)->heapRank = (*h1)->heapRank;
+	(*h2)->heapRank = rank1;
+
+	//exchange pointer references
+	swapSpace = *h1;
+	*h1 = *h2;
+	*h2 = swapSpace;
+}
+
+int heapify(int index) {
 	int currentIndex;
 	int largest;
 	int stable;
 
 	currentIndex = index;
 	stable = 0;
-	while (!stable) {
+	while ( stable != 1) {
 		//check left existence and compare
-		if(2 * currentIndex <= size && heap[2 * currentIndex].key > heap[currentIndex].key) {
+		if(2 * currentIndex <= size && heap[2 * currentIndex]->gain > heap[currentIndex]->gain) {
 			largest = 2 * currentIndex;
 			stable = 0;
 		}
@@ -30,60 +44,67 @@ void heapify(int index) {
 			largest = currentIndex;
 			stable = 1;
 		}
+
 		//check right existence and compare
-		if(2 * currentIndex + 1 <= size && heap[2 * currentIndex + 1].key > heap[largest].key) {
+		if(2 * currentIndex + 1 <= size && heap[2 * currentIndex + 1]->gain > heap[largest]->gain) {
 			largest = 2 * currentIndex + 1;
 			stable = 0;
 		}
 
 		//not stable, swap and loop
 		if( largest != currentIndex) {
-			swapHeapNode(&heap[largest], &heap[currentIndex]);
+			swapVertex(&heap[largest], &heap[currentIndex]);
+			currentIndex = largest;
 		}
 		//stable, terminate
 		else {
 			stable = 1;
 		}
-
 	}
+	return currentIndex;
 }
 
 int extractMax() {
 	size = size - 1;
-	swapHeapNode(&heap[0], &heap[size]);
-	heapify(0);
-	return heap[size].vertexNo;
+	swapVertex(&heap[1], &heap[size]);
+	heapify(1);
+	return heap[size]->vertexNo;
 }
 
-void buildHeap(int* keys, int* vertexNumbers, int length) {
+void buildHeap( vertex* vertexList, int length) {
 	int i;
+	size = length;
+	heap = malloc( (size + 1) * sizeof(vertex*)); //size + 1 because index 0 will be empty.
 
-	heap = malloc( sizeof(HeapNode) * length);
+	//heap[i + 1] because we want heap to start with index 1
 	for( i = 0; i < length; i++) {
-		heap[i].key = keys[i];
-		heap[i].vertexNo = vertexNumbers[i];
+		heap[i + 1] = vertexList + i;
+		heap[i + 1]->heapRank = i + 1;
+	}
+
+	for ( i = size / 2; i >= 1; i--) {
+		heapify(i);
 	}
 }
 
-void swapHeapNode(HeapNode* h1, HeapNode* h2) {
-	HeapNode* swapSpace;
-
-	*swapSpace = *h1;
-	*h1 = *h2;
-	*h2 = *swapSpace;
-}
-
 void changeKey(int keyChange, int* heapRank) {
-	heap[*heapRank].key += keyChange;
+	heap[*heapRank]->gain += keyChange;
 	//change is positive, try to move up
 	if(keyChange > 0) {
-		while( heap[*heapRank].key > heap[(*heapRank) / 2].key) {
-			swapHeapNode( &heap[*heapRank], &heap[(*heapRank) / 2]);
+		while( heap[*heapRank]->gain > heap[(*heapRank) / 2]->gain && *heapRank > 1) {
+			swapVertex( &heap[*heapRank], &heap[(*heapRank) / 2]);
 			*heapRank = *heapRank / 2;
 		}
 	}
 	//change is negative, try to go down
 	else {
-		heapify(&heapRank);
+		*heapRank = heapify(*heapRank);
+	}
+}
+
+void printHeap() {
+	printf( "%d, heap[0](should be garbage)\n", heap[0]->gain);
+	for (int i = 1; i <= size ; i++) {
+		printf("heap[%d].gain = %d\n", i, heap[i]->gain);
 	}
 }
