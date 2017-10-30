@@ -13,5 +13,8 @@ int extractMax();
 void buildHeap( Vertex* vertexList, int length);
 void printHeap(); //testing purposes
 void addNode(Vertex* vertex);
+int peekMaxKey();
+int peekMaxVertexNo();
+int getSize();
 
 #endif //PARTITION_HEAP_H

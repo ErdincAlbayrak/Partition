@@ -3,5 +3,5 @@ project(Partition)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES main.c PriorityQueue.c PriorityQueue.h Heap.c Heap.h Vertex.h)
+set(SOURCE_FILES main.c PriorityQueue.c PriorityQueue.h Heap.c Heap.h Vertex.h Graph.c Graph.h)
 add_executable(Partition ${SOURCE_FILES})

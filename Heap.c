@@ -10,6 +10,9 @@ Vertex** heap;
 int size;
 int maxSize;
 
+int getSize() {
+	return size;
+}
 void swapVertex(Vertex** h1, Vertex** h2) {
 	Vertex* swapSpace;
 	int rank1;
@@ -68,6 +71,14 @@ int extractMax() {
 	size = size - 1;
 	heapify(1);
 	return heap[size + 1]->vertexNo;
+}
+
+int peekMaxKey() {
+	return heap[1]->gain;
+}
+
+int peekMaxVertexNo() {
+	return heap[1]->vertexNo;
 }
 
 void buildHeap( Vertex* vertexList, int length) {

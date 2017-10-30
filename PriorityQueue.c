@@ -4,6 +4,29 @@
 
 #include "PriorityQueue.h"
 
-int get(void) {
-	return 5;
+void batchEnqueue(Vertex* vertexList, int length) {
+	buildHeap(vertexList, length);
+}
+
+void changeGain(int heapRank, int keyChange) {
+	changeKey(heapRank, keyChange);
+}
+
+int dequeue() {
+	return extractMax();
+}
+
+void enqueue(Vertex* vertex) {
+	addNode(vertex);
+}
+
+int peekVertexNo() {
+	return peekMaxVertexNo();
+}
+int peekMaxGain() {
+	return peekMaxKey();
+}
+
+int size() {
+	return getSize();
 }

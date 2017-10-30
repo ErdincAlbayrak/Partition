@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "PriorityQueue.h"
-#include "Heap.h"
 #include "Vertex.h"
 
 void printVertexList(Vertex* list, int length) {
