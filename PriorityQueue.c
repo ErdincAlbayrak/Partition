@@ -27,6 +27,6 @@ int peekMaxGain() {
 	return peekMaxKey();
 }
 
-int size() {
+int getQueueSize() {
 	return getSize();
 }

@@ -14,6 +14,6 @@ int dequeue(); //returns vertexNo of deuqueued Vertex
 void enqueue(Vertex* vertex);
 int peekVertexNo();
 int peekMaxGain();
-int size();
+int getQueueSize();
 
 #endif //PARTITION_PRIORITYQUEUE_H
