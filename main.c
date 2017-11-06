@@ -2,9 +2,11 @@
 #include <malloc.h>
 #include "PriorityQueue.h"
 #include "Vertex.h"
+#include "Graph.h"
 
 
 void partition() {
+	setInitialGains();
 }
 
 void printVertexList(Vertex* list, int length) {

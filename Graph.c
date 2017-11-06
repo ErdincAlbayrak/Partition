@@ -26,7 +26,7 @@ void setInitialGains() {
     int adjacencyEnd;
     int neighborVertexNo;
     for( int i = 0; i < graph.size; i++) {
-        getAdjacencyList(i,adjacencyStart,adjacencyEnd);
+        getAdjacencyList(i,&adjacencyStart,&adjacencyEnd);
 
         for (int j = adjacencyStart; j < adjacencyEnd; ++j) {
             neighborVertexNo = graph.edgeDestinations[j];
@@ -47,7 +47,7 @@ void changePartition(int vertexNo) {
     //if partition balance criterion is met, change and update gains
     if( partitionWeigths[graph.vertexList[vertexNo].partition ^ 1] + 1 <= (graph.size / 2 * (1 + BALANCE_COEFFICIENT) ) ) {
         //update gains of neighbors
-        getAdjacencyList(vertexNo, adjacencyStart, adjacencyEnd);
+        getAdjacencyList(vertexNo, &adjacencyStart, &adjacencyEnd);
         for (int j = adjacencyStart; j < adjacencyEnd; ++j) {
             neighborVertexNo = graph.edgeDestinations[j];
             if (!graph.vertexList[neighborVertexNo].locked) {
