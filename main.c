@@ -3,6 +3,10 @@
 #include "PriorityQueue.h"
 #include "Vertex.h"
 
+
+void partition() {
+}
+
 void printVertexList(Vertex* list, int length) {
 	int i;
 
@@ -14,7 +18,6 @@ void printVertexList(Vertex* list, int length) {
 
 int main() {
 	printf("Hello, World!\n");
-	const double balanceCoefficient = 0.1;
 	int i;
 
 
