@@ -8,7 +8,8 @@
 #include "Vertex.h"
 #include "Heap.h"
 
-void batchEnqueue(Vertex* vertexList, int length);
+void buildQueue(Vertex* vertexList, int length);
+void deleteQueue();
 void changeGain(int heapRank, int keyChange);
 int dequeue(); //returns vertexNo of deuqueued Vertex
 void enqueue(Vertex* vertex);

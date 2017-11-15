@@ -7,10 +7,6 @@
 #include "Graph.h"
 
 
-void partition() {
-	setInitialGains();
-}
-
 void printVertexList(Vertex* list, int length) {
 	int i;
 
@@ -33,6 +29,8 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 	int k;
 	int i;
 	int vertexCollector;
+	int incorrectName;
+	int correctName;
 
 	file = fopen(fileAddress,"r");
 	vertexList = malloc( sizeof(Vertex) * vertexNo);
@@ -88,6 +86,17 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 
 	} while(  fgets(stringBuffer, 32, file) != NULL );
 
+	//fix edgeDestinations from being vertexName to vertexNo
+	for ( i = 0; i < vertexNo; ++i) {
+		incorrectName = vertexList[i].vertexName;
+		correctName = vertexList[i].vertexNo;
+		for (int j = 0; j < edgeNo; ++j) {
+			if(edgeDestinations[j] == incorrectName)
+				edgeDestinations[j] = correctName;
+		}
+	}
+
+
 	//malloc graph and set its fields
 	Graph* g = malloc(sizeof(Graph) * 1);
 	g->edgeDestinations = edgeDestinations;
@@ -102,13 +111,18 @@ int main() {
 	printf("Hello, World!\n");
 	int i;
 	Graph* graph;
-	graph = createGraph("CA-HepTh.txt",9877, 51971);
+	graph = createGraph("CA-GrQc.txt",5242, 28980);
 
-	printf("vertexsize = %d, edgeSize = %d\n",graph->vertexSize,graph->edgeSize);
-	for( i = 0; i < 10; i++) {
+/*	printf("vertexsize = %d, edgeSize = %d\n\n",graph->vertexSize,graph->edgeSize);
+	for( i = 0; i < graph->vertexSize; i++) {
 		printf("vertexList[%d].vertexName = %d\n",i,graph->vertexList[i].vertexName );
 		printf("vertexlist[%d].vertexNo = %d\n",i,graph->vertexList[i].vertexNo );
-	}
+		printf("graph.edgeIndex[%d] = %d\n\n",i, graph->edgeIndex[i]);
+	}*/
+
+	setGraph(graph);
+	printf("set the graph\n");
+	partition();
 
 /*
 	//start heap test

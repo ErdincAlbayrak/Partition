@@ -14,11 +14,10 @@ typedef struct Graph {
 	int edgeSize;
 } Graph;
 
-void buildGraphFromFile();
-void changePartition(int vertexNo);
+void setGraph( Graph* g);
+int changePartition(int vertexNo);
 void setInitialGains();
-void changePartition(int vertexNo);
-void setGraph(Graph* g);
+void partition();
 
 
 #endif //PARTITION_GRAPH_H

@@ -151,3 +151,9 @@ void addNode(Vertex* vertex) {
 		newRank = newRank / 2;
 	}
 }
+
+void deleteHeap() {
+	free(heap);
+	size = 0;
+	maxSize = 0;
+}

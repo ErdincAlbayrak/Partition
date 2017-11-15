@@ -4,8 +4,12 @@
 
 #include "PriorityQueue.h"
 
-void batchEnqueue(Vertex* vertexList, int length) {
+void buildQueue(Vertex* vertexList, int length) {
 	buildHeap(vertexList, length);
+}
+
+void deleteQueue() {
+	deleteHeap();
 }
 
 void changeGain(int heapRank, int keyChange) {
