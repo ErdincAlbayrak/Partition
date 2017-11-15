@@ -13,6 +13,8 @@ int maxSize;
 int getSize() {
 	return size;
 }
+
+
 void swapVertex(Vertex** h1, Vertex** h2) {
 	Vertex* swapSpace;
 	int rank1;

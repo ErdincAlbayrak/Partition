@@ -5,27 +5,24 @@
 #include "Graph.h"
 #include "PriorityQueue.h"
 
-//typedef struct Graph {
-//    int* edgeIndex; //entries contain pointers to edgeDestination entries (possible indices) |V| long
-//    int* edgeDestinations; //entries contain vertexNo's 2|E| long
-//    Vertex* vertexList;
-//    int size;
-//} Graph;
-
 Graph graph;
-const double BALANCE_COEFFICIENT= 0.1;
+const double BALANCE_COEFFICIENT = 0.1;
 int partitionWeigths[2];
 
 void getAdjacencyList(int vertexNo, int* startEdge, int* endEdge) {
     *startEdge = graph.edgeIndex[vertexNo];
-    *endEdge = graph.edgeIndex[vertexNo+1];
+
+    if( vertexNo != graph.vertexSize)
+    	*endEdge = graph.edgeIndex[vertexNo+1];
+	else
+		*endEdge = graph.edgeSize;
 }
 
 void setInitialGains() {
     int adjacencyStart;
     int adjacencyEnd;
     int neighborVertexNo;
-    for( int i = 0; i < graph.size; i++) {
+    for( int i = 0; i < graph.vertexSize; i++) {
         getAdjacencyList(i,&adjacencyStart,&adjacencyEnd);
 
         for (int j = adjacencyStart; j < adjacencyEnd; ++j) {
@@ -45,7 +42,7 @@ void changePartition(int vertexNo) {
 
     graph.vertexList[vertexNo].locked = 1;
     //if partition balance criterion is met, change and update gains
-    if( partitionWeigths[graph.vertexList[vertexNo].partition ^ 1] + 1 <= (graph.size / 2 * (1 + BALANCE_COEFFICIENT) ) ) {
+    if( partitionWeigths[graph.vertexList[vertexNo].partition ^ 1] + 1 <= (graph.vertexSize / 2 * (1 + BALANCE_COEFFICIENT) ) ) {
         //update gains of neighbors
         getAdjacencyList(vertexNo, &adjacencyStart, &adjacencyEnd);
         for (int j = adjacencyStart; j < adjacencyEnd; ++j) {

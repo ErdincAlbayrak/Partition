@@ -1,5 +1,7 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 #include "PriorityQueue.h"
 #include "Vertex.h"
 #include "Graph.h"
@@ -18,11 +20,97 @@ void printVertexList(Vertex* list, int length) {
 	}
 }
 
+Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
+	FILE* file;
+	Vertex* vertexList;
+	int* edgeIndex;
+	int* edgeDestinations;
+	char stringBuffer[32];
+	char numberBuffer[8];
+	char currentChar;
+	int lastSource;
+	int c;
+	int k;
+	int i;
+	int vertexCollector;
+
+	file = fopen(fileAddress,"r");
+	vertexList = malloc( sizeof(Vertex) * vertexNo);
+	edgeIndex = malloc( sizeof(int) * vertexNo);
+	edgeDestinations = malloc( sizeof(int) * edgeNo);
+
+	vertexCollector = 0;
+	i = 0;
+	fgets(stringBuffer, 32, file);
+	do {
+		//take source vertex
+		c = 0;
+		currentChar = stringBuffer[c];
+		while ( currentChar != '\t' && currentChar != ' ') {
+			numberBuffer[c] = stringBuffer[c];
+			c++;
+			currentChar = stringBuffer[c];
+		}
+		numberBuffer[c] = '\0';
+
+
+		//if this source is same as last source, do not increment edgeIndex array
+		//printf("lastSource = %d, currentNumber = %d, i=%d\n\n", lastSource,atoi(numberBuffer),i );
+		if ( vertexCollector == 0) {
+			edgeIndex[vertexCollector] = i;
+			vertexList[vertexCollector].vertexName = atoi(numberBuffer);
+			vertexList[vertexCollector].vertexNo = vertexCollector;
+			vertexCollector++;
+			lastSource = atoi(numberBuffer);
+		}
+		else if ( lastSource != atoi(numberBuffer)) {
+			edgeIndex[vertexCollector] = i;
+			vertexList[vertexCollector].vertexName = atoi(numberBuffer);
+			vertexList[vertexCollector].vertexNo = vertexCollector;
+			vertexCollector++;
+			lastSource = atoi(numberBuffer);
+		}
+		//printf("reahced \n");
+
+		//take destination vertex
+		k = 0;
+		c++;
+		currentChar = stringBuffer[c];
+		while (currentChar != '\n' && currentChar != ' ' && currentChar != '\r') {
+			numberBuffer[k] = stringBuffer[c];
+			c++;
+			currentChar = stringBuffer[c];
+			k++;
+		}
+		numberBuffer[k] = '\0';
+		edgeDestinations[i] = atoi(numberBuffer);
+		i++;
+
+	} while(  fgets(stringBuffer, 32, file) != NULL );
+
+	//malloc graph and set its fields
+	Graph* g = malloc(sizeof(Graph) * 1);
+	g->edgeDestinations = edgeDestinations;
+	g->edgeIndex = edgeIndex;
+	g->vertexList = vertexList;
+	g->edgeSize = edgeNo;
+	g->vertexSize = vertexNo;
+	return g;
+}
+
 int main() {
 	printf("Hello, World!\n");
 	int i;
+	Graph* graph;
+	graph = createGraph("CA-HepTh.txt",9877, 51971);
 
+	printf("vertexsize = %d, edgeSize = %d\n",graph->vertexSize,graph->edgeSize);
+	for( i = 0; i < 10; i++) {
+		printf("vertexList[%d].vertexName = %d\n",i,graph->vertexList[i].vertexName );
+		printf("vertexlist[%d].vertexNo = %d\n",i,graph->vertexList[i].vertexNo );
+	}
 
+/*
 	//start heap test
 	Vertex* vertexList;
 	int length = 8;
@@ -83,6 +171,7 @@ int main() {
 
 
 	//end heap test
+*/
 
 	return 0;
 }
