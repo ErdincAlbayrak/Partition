@@ -10,7 +10,7 @@
 #include "PriorityQueue.h"
 
 Graph graph;
-const double BALANCE_COEFFICIENT = 0.001;
+const double BALANCE_COEFFICIENT = 0.1;
 int partitionWeigths[2];
 
 void setGraph( Graph* g) {
@@ -63,9 +63,9 @@ int changePartition(int vertexNo) {
             neighborVertexNo = graph.edgeDestinations[j];
             if (!graph.vertexList[neighborVertexNo].locked) {
                 if (graph.vertexList[vertexNo].partition != graph.vertexList[neighborVertexNo].partition)
-                    graph.vertexList[neighborVertexNo].gain = graph.vertexList[neighborVertexNo].gain + 2;
-                else
                     graph.vertexList[neighborVertexNo].gain = graph.vertexList[neighborVertexNo].gain - 2;
+                else
+                    graph.vertexList[neighborVertexNo].gain = graph.vertexList[neighborVertexNo].gain + 2;
             }
         }
         //finally change partition
@@ -107,17 +107,6 @@ int doSinglePass() {
 
 	setInitialGains();
 
-/*	//check gains
-	printf("\n");
-	for (int i = 0; i < graph.vertexSize; ++i) {
-		printf("vertexlist[%d].gain = %d\n", i,graph.vertexList[i].gain);
-	}
-	printf("\n");
-	for (int i = 0; i < graph.vertexSize; ++i) {
-		printf("vertexlist[%d].partition = %d\n", i,graph.vertexList[i].partition);
-	}
-	printf("\n");*/
-
 	//build heap here
 	buildQueue(graph.vertexList,graph.vertexSize);
 
@@ -125,9 +114,6 @@ int doSinglePass() {
 	moveNo = 0;
 	for (int i = 0; i < graph.vertexSize; ++i) {
 		currentVertexNo = dequeue();
-
-/*		printf("i = %d, moveNo = %d, currentVertex = %d, its gain = %d\n",
-			   i,moveNo,currentVertexNo, graph.vertexList[currentVertexNo].gain);*/
 
 		currentGain = changePartition(currentVertexNo);
 		//if move was made, add it to lists of gain and moves
@@ -155,26 +141,24 @@ int doSinglePass() {
 		}
 	}
 
-/*	printf("\n");
-	for (int i = 0; i < moveNo; ++i) {
-		printf("prefixArray[%d] = %d\n",i,prefixArray[i]);
-	}
-	printf("maxGain = %d, maxIndex = %d\n",maxGain,maxIndex);
-	printf("\n");
-	for (int i = 0; i < moveNo; ++i) {
-		printf("changedArray[%d] = %d\n",i,changedVertexArray[i]);
-	}*/
-
 	//revert bad moves
 	for (int i = moveNo - 1; i > maxIndex; i--) {
 		revertPartition(changedVertexArray[i]);
 	}
+
+	free(prefixArray);
+	free(changedVertexArray);
 
 	return maxGain;
 }
 
 void partition() {
 	int numberOfPasses;
+	int timeStart;
+	int timeEnd;
+
+
+	timeStart = clock();
 	//randomize partitions
 	srand((unsigned int) time(NULL));
 	partitionWeigths[0] = INT_MAX;
@@ -193,26 +177,11 @@ void partition() {
 		printf("vertexSize = %d, maxWeigth = %f\n",graph.vertexSize,graph.vertexSize * (1 + BALANCE_COEFFICIENT) / 2);
 		printf("weights %d, %d\n",partitionWeigths[0],partitionWeigths[1]);
 	}
-
-/*	partitionWeigths[0] = 0;
-	partitionWeigths[1] = 0;
-	for (int i = 0; i < graph.vertexSize; ++i) {
-		graph.vertexList[i].partition = i / 4;
-		partitionWeigths[graph.vertexList[i].partition]++;
-	}
-	printf("weights %d, %d\n",partitionWeigths[0],partitionWeigths[1]);
-	for (int i = 0; i < graph.vertexSize; ++i) {
-		printf("vertexlist[%d].partition = %d\n",i,graph.vertexList[i].partition);
-	}*/
-
-	//do passes while there is gain
-/*	numberOfPasses = 1;
-	while( doSinglePass() > 0)
-		numberOfPasses++;*/
+	timeEnd = clock();
+	printf("arbitrary initialization over, took %f\n", (timeEnd - timeStart) / (double) CLOCKS_PER_SEC );
 
 	int maxGain = 1;
 	numberOfPasses = 0;
-	int timeStart,timeEnd;
 	while( maxGain > 0) {
 		timeStart = clock();
 		maxGain = doSinglePass();
@@ -221,5 +190,5 @@ void partition() {
 		printf("pass %d took %f, gain was %d\n",numberOfPasses, (timeEnd - timeStart) / (double) CLOCKS_PER_SEC, maxGain );
 	}
 
-	printf("numberOfPasses = %d\n",numberOfPasses);
+	printf("numberOfPasses = %d, time = %f\n",numberOfPasses,(timeEnd - timeStart) / (double) CLOCKS_PER_SEC);
 }

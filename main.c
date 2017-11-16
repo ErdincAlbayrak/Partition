@@ -22,7 +22,7 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 	int* edgeIndex;
 	int* edgeDestinations;
 	char stringBuffer[32];
-	char numberBuffer[8];
+	char numberBuffer[16];
 	char currentChar;
 	int lastSource;
 	int c;
@@ -36,6 +36,7 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 	vertexList = malloc( sizeof(Vertex) * vertexNo);
 	edgeIndex = malloc( sizeof(int) * vertexNo);
 	edgeDestinations = malloc( sizeof(int) * edgeNo);
+
 
 	vertexCollector = 0;
 	i = 0;
@@ -53,7 +54,6 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 
 
 		//if this source is same as last source, do not increment edgeIndex array
-		//printf("lastSource = %d, currentNumber = %d, i=%d\n\n", lastSource,atoi(numberBuffer),i );
 		if ( vertexCollector == 0) {
 			edgeIndex[vertexCollector] = i;
 			vertexList[vertexCollector].vertexName = atoi(numberBuffer);
@@ -68,13 +68,12 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 			vertexCollector++;
 			lastSource = atoi(numberBuffer);
 		}
-		//printf("reahced \n");
 
 		//take destination vertex
 		k = 0;
 		c++;
 		currentChar = stringBuffer[c];
-		while (currentChar != '\n' && currentChar != ' ' && currentChar != '\r') {
+		while (currentChar != '\n') {
 			numberBuffer[k] = stringBuffer[c];
 			c++;
 			currentChar = stringBuffer[c];
@@ -82,11 +81,12 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 		}
 		numberBuffer[k] = '\0';
 		edgeDestinations[i] = atoi(numberBuffer);
-		i++;
 
+		i++;
 	} while(  fgets(stringBuffer, 32, file) != NULL );
 
 	//fix edgeDestinations from being vertexName to vertexNo
+	printf("read file, now fixing edge dests\n");
 	for ( i = 0; i < vertexNo; ++i) {
 		incorrectName = vertexList[i].vertexName;
 		correctName = vertexList[i].vertexNo;
@@ -111,17 +111,9 @@ int main() {
 	printf("Hello, World!\n");
 	int i;
 	Graph* graph;
-	graph = createGraph("CA-GrQc.txt",5242, 28980);
-
-/*	printf("vertexsize = %d, edgeSize = %d\n\n",graph->vertexSize,graph->edgeSize);
-	for( i = 0; i < graph->vertexSize; i++) {
-		printf("vertexList[%d].vertexName = %d\n",i,graph->vertexList[i].vertexName );
-		printf("vertexlist[%d].vertexNo = %d\n",i,graph->vertexList[i].vertexNo );
-		printf("graph.edgeIndex[%d] = %d\n\n",i, graph->edgeIndex[i]);
-	}*/
-
+	graph = createGraph("Gowalla_edges.txt", 196591, 1900654);
+	printf("read file\n");
 	setGraph(graph);
-	printf("set the graph\n");
 	partition();
 
 /*
