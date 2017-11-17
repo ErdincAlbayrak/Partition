@@ -73,7 +73,7 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 		k = 0;
 		c++;
 		currentChar = stringBuffer[c];
-		while (currentChar != '\n') {
+		while (currentChar != '\n' && currentChar != '\r' && currentChar != ' ') {
 			numberBuffer[k] = stringBuffer[c];
 			c++;
 			currentChar = stringBuffer[c];
@@ -84,18 +84,21 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 
 		i++;
 	} while(  fgets(stringBuffer, 32, file) != NULL );
+	fclose(file);
 
 	//fix edgeDestinations from being vertexName to vertexNo
-	printf("read file, now fixing edge dests\n");
+/*	printf("read file, now fixing edge dests\n");
+ 	int* correctEdgeDests = malloc(sizeof(int) * edgeNo);
 	for ( i = 0; i < vertexNo; ++i) {
 		incorrectName = vertexList[i].vertexName;
 		correctName = vertexList[i].vertexNo;
 		for (int j = 0; j < edgeNo; ++j) {
 			if(edgeDestinations[j] == incorrectName)
-				edgeDestinations[j] = correctName;
+				correctEdgeDests[j] = correctName;
 		}
 	}
-
+	free(edgeDestinations);
+	edgeDestinations = correctEdgeDests;*/
 
 	//malloc graph and set its fields
 	Graph* g = malloc(sizeof(Graph) * 1);
@@ -108,13 +111,17 @@ Graph* createGraph(char* fileAddress, int vertexNo, int edgeNo) {
 }
 
 int main() {
-	printf("Hello, World!\n");
-	int i;
 	Graph* graph;
+
 	graph = createGraph("Gowalla_edges.txt", 196591, 1900654);
-	printf("read file\n");
+	//graph = createGraph("CA-GrQc.txt", 5242, 28980);
+	//graph = createGraph("CA-HepTh.txt", 9877, 51971);
+	//graph = createGraph("Brightkite_edges.txt", 58227, 428156);
+	//graph = createGraph("SampleGraph.txt", 8, 26);
+
 	setGraph(graph);
 	partition();
+
 
 /*
 	//start heap test

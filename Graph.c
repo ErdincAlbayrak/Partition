@@ -10,7 +10,7 @@
 #include "PriorityQueue.h"
 
 Graph graph;
-const double BALANCE_COEFFICIENT = 0.1;
+const double BALANCE_COEFFICIENT = 0.5;
 int partitionWeigths[2];
 
 void setGraph( Graph* g) {
@@ -26,6 +26,27 @@ void getAdjacencyList(int vertexNo, int* startEdge, int* endEdge) {
 	else {
 		*endEdge = graph.edgeSize;
 	}
+}
+
+void checkCutSize() {
+	int adjacencyStart;
+	int adjacencyEnd;
+	int neighborVertexNo;
+	int cutSize;
+
+	cutSize = 0;
+	for( int i = 0; i < graph.vertexSize; i++) {
+		getAdjacencyList(i,&adjacencyStart,&adjacencyEnd);
+
+		for (int j = adjacencyStart; j < adjacencyEnd; ++j) {
+			neighborVertexNo = graph.edgeDestinations[j];
+			//comparison of partitions of neighbor and current
+			if( graph.vertexList[i].partition != graph.vertexList[neighborVertexNo].partition)
+				cutSize++;
+		}
+	}
+	cutSize = cutSize / 2;
+	printf("current cut size is %d\n",cutSize);
 }
 
 void setInitialGains() {
@@ -107,10 +128,10 @@ int doSinglePass() {
 
 	setInitialGains();
 
-	//build heap here
+	//build heap
 	buildQueue(graph.vertexList,graph.vertexSize);
 
-	//do the tentative partition changes here
+	//do the tentative partition changes
 	moveNo = 0;
 	for (int i = 0; i < graph.vertexSize; ++i) {
 		currentVertexNo = dequeue();
@@ -156,6 +177,8 @@ void partition() {
 	int numberOfPasses;
 	int timeStart;
 	int timeEnd;
+	int timeTotal;
+	int maxGain;
 
 
 	timeStart = clock();
@@ -180,15 +203,18 @@ void partition() {
 	timeEnd = clock();
 	printf("arbitrary initialization over, took %f\n", (timeEnd - timeStart) / (double) CLOCKS_PER_SEC );
 
-	int maxGain = 1;
+	maxGain = 1;
 	numberOfPasses = 0;
+	timeTotal = 0;
 	while( maxGain > 0) {
+		checkCutSize();
 		timeStart = clock();
 		maxGain = doSinglePass();
 		numberOfPasses++;
 		timeEnd = clock();
+		timeTotal = timeTotal + timeEnd - timeStart;
 		printf("pass %d took %f, gain was %d\n",numberOfPasses, (timeEnd - timeStart) / (double) CLOCKS_PER_SEC, maxGain );
 	}
 
-	printf("numberOfPasses = %d, time = %f\n",numberOfPasses,(timeEnd - timeStart) / (double) CLOCKS_PER_SEC);
+	printf("numberOfPasses = %d, time = %f\n",numberOfPasses,timeTotal / (double) CLOCKS_PER_SEC);
 }
