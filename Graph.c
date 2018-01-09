@@ -10,7 +10,7 @@
 #include "PriorityQueue.h"
 
 Graph graph;
-const double BALANCE_COEFFICIENT = 0.5;
+const double BALANCE_COEFFICIENT = 0.1;
 int partitionWeigths[2];
 
 void setGraph( Graph* g) {
