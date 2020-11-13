@@ -16,5 +16,6 @@ void addNode(Vertex* vertex);
 int peekMaxKey();
 int peekMaxVertexNo();
 int getSize();
+void deleteHeap();
 
 #endif //PARTITION_HEAP_H

@@ -13,13 +13,12 @@ int maxSize;
 int getSize() {
 	return size;
 }
+
 void swapVertex(Vertex** h1, Vertex** h2) {
 	Vertex* swapSpace;
 	int rank1;
 
-	//heap[largest]->heapRank = currentIndex;
-	//heap[currentIndex]->heapRank = largest;
-	//change heapRanks
+	//exchange heapRanks
 	rank1 = (*h1)->heapRank;
 	(*h1)->heapRank = (*h2)->heapRank;
 	(*h2)->heapRank = rank1;
@@ -148,4 +147,10 @@ void addNode(Vertex* vertex) {
 		swapVertex( &heap[newRank], &heap[(newRank) / 2]);
 		newRank = newRank / 2;
 	}
+}
+
+void deleteHeap() {
+	free(heap);
+	size = 0;
+	maxSize = 0;
 }
